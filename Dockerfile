@@ -4,7 +4,7 @@ ARG PYTHON_VERSION=3.11
 FROM python:${PYTHON_VERSION} as developer
 
 # Add any system dependencies for the developer/build environment here
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     graphviz \
     bc \
     bzip2 \
@@ -20,19 +20,9 @@ RUN apt-get update && apt-get install -y \
     gmp-devel \
     libffi-devel \
     libmpc-devel \
-    libjpeg-turbo-devel \
-    libuuid-devel \
-    ncurses-compat-libs \
-    openssl-devel \
     patch \
-    python3-devel \
     python3-setuptools \ 
-    readline-devel \
     unzip \ 
-    xorg-x11-server-Xvfb \
-    xorg-x11-utils \
-    xz \
-    zlib-devel \
     && rm -rf /var/lib/apt/lists/*
 
 RUN yum -y group install "Development Tools"
