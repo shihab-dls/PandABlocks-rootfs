@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     graphviz \
     && rm -rf /var/lib/apt/lists/*
 
-RUN yum -y upgrade && yum -y install \
+RUN pip3 upgrade && pip3 install \
     bc \
     bzip2 \
     cpio \
