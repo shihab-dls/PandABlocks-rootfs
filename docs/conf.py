@@ -10,7 +10,7 @@ from subprocess import check_output
 
 import requests
 
-import my_package
+import pandablocks
 
 # -- General configuration ------------------------------------------------
 
@@ -18,7 +18,7 @@ import my_package
 project = "PandABlocks-rootfs"
 
 # The full version, including alpha/beta/rc tags.
-release = my_package.__version__
+release = pandablocks.__version__
 
 # The short X.Y version.
 if "+" in release:
