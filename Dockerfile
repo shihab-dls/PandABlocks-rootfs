@@ -70,9 +70,6 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 # Make sure git doesn't fail when used to obtain a tag name
 RUN git config --global --add safe.directory '*'
 
-# Entrypoint into the container
-WORKDIR /repos
-CMD ["/bin/bash"]
 
 # Set up a virtual environment and put it in PATH
 RUN python -m venv /venv
