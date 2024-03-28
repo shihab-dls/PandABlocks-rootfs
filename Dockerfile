@@ -70,16 +70,3 @@ WORKDIR /repos
 CMD ["/bin/bash"]
 
 ARG PYTHON_VERSION=3.11
-
-# Add any system dependencies for the developer/build environment here
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    graphviz \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set up a virtual environment and put it in PATH
-RUN python -m venv /venv
-ENV PATH=/venv/bin:$PATH
-
-# change this entrypoint if it is not the same as the repo
-ENTRYPOINT ["pandablocks"]
-CMD ["--version"]
