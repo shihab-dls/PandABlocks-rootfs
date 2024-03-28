@@ -1,11 +1,9 @@
-# The devcontainer should use the developer target and run as root with podman
-# or docker with user namespaces.
-ARG PYTHON_VERSION=3.11
-FROM python:${PYTHON_VERSION} as developer
+# ./Dockerfile
 
-# Add any system dependencies for the developer/build environment here
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    graphviz \
+FROM rockylinux:8.5
+
+# Host dependencies 
+RUN yum -y upgrade && yum -y install \
     bc \
     bzip2 \
     cpio \
@@ -20,10 +18,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gmp-devel \
     libffi-devel \
     libmpc-devel \
+    libjpeg-turbo-devel \
+    libuuid-devel \
+    ncurses-compat-libs \
+    openssl-devel \
     patch \
+    python3-devel \
     python3-setuptools \ 
+    readline-devel \
     unzip \ 
-    && rm -rf /var/lib/apt/lists/*
+    xorg-x11-server-Xvfb \
+    xorg-x11-utils \
+    xz \
+    zlib-devel
+
 
 RUN yum -y group install "Development Tools"
 
@@ -57,25 +65,6 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 # Make sure git doesn't fail when used to obtain a tag name
 RUN git config --global --add safe.directory '*'
 
-
-# Set up a virtual environment and put it in PATH
-RUN python -m venv /venv
-ENV PATH=/venv/bin:$PATH
-
-# The build stage installs the context into the venv
-FROM developer as build
-COPY . /context
-WORKDIR /context
-RUN pip install .
-
-# The runtime stage copies the built venv into a slim runtime container
-FROM python:${PYTHON_VERSION}-slim as runtime
-# Add apt-get system dependecies for runtime here if needed
-
-# copy the virtual environment from the build stage and put it in PATH
-COPY --from=build /venv/ /venv/
-ENV PATH=/venv/bin:$PATH
-
-# change this entrypoint if it is not the same as the repo
-ENTRYPOINT ["pandablocks"]
-CMD ["--version"]
+# Entrypoint into the container
+WORKDIR /repos
+CMD ["/bin/bash"]
