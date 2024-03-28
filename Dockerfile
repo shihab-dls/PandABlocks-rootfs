@@ -50,8 +50,6 @@ RUN bash scripts/GNU-toolchain.sh
 RUN bash scripts/tar-files.sh
 
 # For the documentation
-RUN python3 -m pip install --upgrade pip
-
 RUN pip3 install matplotlib \ 
     rst2pdf \
     sphinx \
