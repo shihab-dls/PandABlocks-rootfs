@@ -87,7 +87,6 @@ WORKDIR /context
 RUN pip install .
 
 # The runtime stage copies the built venv into a slim runtime container
-FROM python:${PYTHON_VERSION}-slim as runtime
 # Add apt-get system dependecies for runtime here if needed
 
 # copy the virtual environment from the build stage and put it in PATH
