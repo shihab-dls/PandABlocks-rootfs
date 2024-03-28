@@ -6,9 +6,6 @@ FROM python:${PYTHON_VERSION} as developer
 # Add any system dependencies for the developer/build environment here
 RUN apt-get update && apt-get install -y --no-install-recommends \
     graphviz \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 upgrade && pip3 install \
     bc \
     bzip2 \
     cpio \
@@ -35,8 +32,8 @@ RUN pip3 upgrade && pip3 install \
     xorg-x11-server-Xvfb \
     xorg-x11-utils \
     xz \
-    zlib-devel
-
+    zlib-devel \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN yum -y group install "Development Tools"
 
