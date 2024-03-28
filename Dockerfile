@@ -80,12 +80,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python -m venv /venv
 ENV PATH=/venv/bin:$PATH
 
-# The build stage installs the context into the venv
-FROM developer as build
-COPY . /context
-WORKDIR /context
-RUN pip install .
-
 # change this entrypoint if it is not the same as the repo
 ENTRYPOINT ["pandablocks"]
 CMD ["--version"]
