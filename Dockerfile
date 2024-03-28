@@ -4,7 +4,7 @@ ARG PYTHON_VERSION=3.11
 FROM python:${PYTHON_VERSION} as developer
 
 # Add any system dependencies for the developer/build environment here
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y \
     graphviz \
     bc \
     bzip2 \
