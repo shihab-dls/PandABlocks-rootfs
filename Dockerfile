@@ -50,34 +50,21 @@ RUN bash scripts/GNU-toolchain.sh
 RUN bash scripts/tar-files.sh
 
 # For the documentation
-# The devcontainer should use the developer target and run as root with podman
-# or docker with user namespaces.
-ARG PYTHON_VERSION=3.11
-FROM python:${PYTHON_VERSION} as developer
+RUN pip3 install matplotlib \ 
+    rst2pdf \
+    sphinx \
+    sphinx-rtd-theme \
+    --upgrade docutils==0.16
 
-# Add any system dependencies for the developer/build environment here
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    graphviz \
-    && rm -rf /var/lib/apt/lists/*
+# Create config file for dls-rootfs
+RUN bash scripts/config-file-rootfs.sh
 
-# Set up a virtual environment and put it in PATH
-RUN python -m venv /venv
-ENV PATH=/venv/bin:$PATH
+# Error can't find python
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
-# The build stage installs the context into the venv
-FROM developer as build
-COPY . /context
-WORKDIR /context
-RUN pip install .
+# Make sure git doesn't fail when used to obtain a tag name
+RUN git config --global --add safe.directory '*'
 
-# The runtime stage copies the built venv into a slim runtime container
-FROM python:${PYTHON_VERSION}-slim as runtime
-# Add apt-get system dependecies for runtime here if needed
-
-# copy the virtual environment from the build stage and put it in PATH
-COPY --from=build /venv/ /venv/
-ENV PATH=/venv/bin:$PATH
-
-# change this entrypoint if it is not the same as the repo
-ENTRYPOINT ["shihab-dls"]
-CMD ["--version"]
+# Entrypoint into the container
+WORKDIR /repos
+CMD ["/bin/bash"]
