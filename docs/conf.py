@@ -1,4 +1,4 @@
-# Configuration file for the Sphinx documentation builder.
+	# Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
@@ -119,7 +119,7 @@ copybutton_prompt_is_regexp = True
 # a list of builtin themes.
 #
 html_theme = "pydata_sphinx_theme"
-github_repo = "PandABlocks-rootfs-docs"
+github_repo = "PandABlocks-rootfs"
 github_user = "shihab-dls"
 switcher_json = f"https://{github_user}.github.io/{github_repo}/switcher.json"
 switcher_exists = requests.get(switcher_json).ok
@@ -166,7 +166,7 @@ html_theme_options = {
 # A dictionary of values to pass into the template engine’s context for all pages
 html_context = {
     "github_user": github_user,
-    "github_repo": github_repo,
+    "github_repo": project,
     "github_version": version,
     "doc_path": "docs",
 }
