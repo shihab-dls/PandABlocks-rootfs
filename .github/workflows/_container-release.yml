@@ -57,7 +57,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/pandablocks/pandablocks-dev-container
+          images: ghcr.io/shihab-dls/pandablocks-container
           tags: |
             type=ref,event=branch
             type=ref,event=tag
