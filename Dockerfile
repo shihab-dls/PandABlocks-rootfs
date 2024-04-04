@@ -7,9 +7,6 @@ ARG TARGETPLATFORM=linux/amd64
 ARG RUNNER_VERSION=2.314.1
 ARG RUNNER_CONTAINER_HOOKS_VERSION=0.6.0
 
-# Shell setup
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
 # The UID env var should be used in child Containerfile.
 ENV UID=1000
 ENV GID=0
