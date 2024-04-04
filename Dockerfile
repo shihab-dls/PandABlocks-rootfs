@@ -139,11 +139,6 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
 # override them with scripts of the same name placed in `/usr/local/bin`.
 COPY entrypoint.sh startup.sh logger.sh graceful-stop.sh update-status /usr/bin/
 
-# Copy the docker shim which propagates the docker MTU to underlying networks
-# to replace the docker binary in the PATH.
-COPY docker-shim.sh /usr/local/bin/docker
-
-
 # Add the Python "User Script Directory" to the PATH
 ENV PATH="${PATH}:${HOME}/.local/bin/"
 ENV ImageOS=ubuntu20
