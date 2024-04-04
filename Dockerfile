@@ -45,36 +45,11 @@ RUN apt-get update -y \
     wget \
     zip \
     zstd \
-    bc \
-    bzip2 \
-    cpio \
-    dbus-x11 \
-    diffutils \
-    epel-release \
-    expat-devel \
-    git \
-    glibc-devel \
-    glibc-langpack-en \
-    gnutls-devel \
-    gmp-devel \
-    libffi-devel \
-    libmpc-devel \
-    libjpeg-turbo-devel \
-    libuuid-devel \
-    ncurses-compat-libs \
-    openssl-devel \
-    patch \
-    python3-devel \
-    python3-setuptools \ 
-    readline-devel \
-    unzip \ 
-    xorg-x11-server-Xvfb \
-    xorg-x11-utils \
-    xz \
-    zlib-devel \
     && ln -sf /usr/bin/python3 /usr/bin/python \
     && ln -sf /usr/bin/pip3 /usr/bin/pip \
     && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get install build-essential
 
 # Download latest git-lfs version
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
