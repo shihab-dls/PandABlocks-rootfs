@@ -135,10 +135,6 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     && which docker-compose \
     && docker compose version
 
-# We place the scripts in `/usr/bin` so that users who extend this image can
-# override them with scripts of the same name placed in `/usr/local/bin`.
-COPY entrypoint.sh startup.sh logger.sh graceful-stop.sh update-status /usr/bin/
-
 # Add the Python "User Script Directory" to the PATH
 ENV PATH="${PATH}:${HOME}/.local/bin/"
 ENV ImageOS=ubuntu20
