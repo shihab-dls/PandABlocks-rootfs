@@ -33,6 +33,11 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     && ./bin/installdependencies.sh \
     && yum clean all
 
+# Runner user
+RUN adduser --disabled-password --gecos "" --uid 1000 runner \
+  && usermod -aG sudo runner \
+  && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers
+
 # Host dependencies 
 RUN yum -y upgrade && yum -y install \
     bc \
