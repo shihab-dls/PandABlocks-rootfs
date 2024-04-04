@@ -9,6 +9,6 @@ jobs:
   conainer-release:
     uses: ./.github/workflows/_container-release.yml
     secrets:
-      DOCKER_USER: ${{DOCKER_USER}}
-      DOCKER_PASS: ${{DOCKER_PASS}}
+      DOCKER_USER: ${{ secrets.DOCKER_USER }}
+      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
     
