@@ -76,9 +76,11 @@ COPY annotypes /annotypes
 COPY pymalcolm /pymalcolm
 COPY malcolmjs /malcolmjs
 
+WORKDIR /home
+
 # Toolchains and tar files
-RUN bash ./scripts/GNU-toolchain.sh
-RUN bash ./scripts/tar-files.sh
+RUN bash scripts/GNU-toolchain.sh
+RUN bash scripts/tar-files.sh
 
 # For the documentation
 RUN pip3 install matplotlib \ 
