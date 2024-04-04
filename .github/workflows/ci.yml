@@ -6,20 +6,5 @@ on:
 
 jobs:
 
-  build-image:
-    uses: ./.github/workflows/_build-image.yml
-
-  build:
-    needs: build-image
-    uses: ./.github/workflows/_build.yml
-
-  docs:
-    uses: ./.github/workflows/_docs.yml
-
-  release:
-    needs: build
-    uses: ./.github/workflows/_release.yml
-
   conainer-release:
-    needs: build
     uses: ./.github/workflows/_container-release.yml
