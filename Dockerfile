@@ -2,6 +2,8 @@
 
 FROM rockylinux:8.5
 
+RUN pwd
+
 #Runner arguments
 ARG TARGETPLATFORM=linux/amd64
 ARG RUNNER_VERSION=2.314.1
@@ -75,8 +77,6 @@ COPY rootfs /rootfs
 COPY annotypes /annotypes
 COPY pymalcolm /pymalcolm
 COPY malcolmjs /malcolmjs
-
-RUN cd ..
 
 RUN pwd
 
