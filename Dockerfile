@@ -76,9 +76,7 @@ COPY annotypes /annotypes
 COPY pymalcolm /pymalcolm
 COPY malcolmjs /malcolmjs
 
-RUN cd ..
-
-RUN pwd
+WORKDIR /
 
 # Toolchains and tar files
 RUN bash scripts/GNU-toolchain.sh
