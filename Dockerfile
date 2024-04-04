@@ -76,6 +76,8 @@ COPY annotypes /annotypes
 COPY pymalcolm /pymalcolm
 COPY malcolmjs /malcolmjs
 
+RUN cd ..
+
 RUN pwd
 
 # Toolchains and tar files
