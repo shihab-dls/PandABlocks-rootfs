@@ -91,6 +91,11 @@ RUN mkdir /opt/hostedtoolcache \
     && chgrp docker /opt/hostedtoolcache \
     && chmod g+rwx /opt/hostedtoolcache
 
+RUN cd "$RUNNER_ASSETS_DIR" \
+    && curl -fLo runner-container-hooks.zip https://github.com/actions/runner-container-hooks/releases/download/v${RUNNER_CONTAINER_HOOKS_VERSION}/actions-runner-hooks-k8s-${RUNNER_CONTAINER_HOOKS_VERSION}.zip \
+    && unzip ./runner-container-hooks.zip -d ./k8s \
+    && rm -f runner-container-hooks.zip
+
 RUN set -vx; \
     export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     && if [ "$ARCH" = "arm64" ]; then export ARCH=aarch64 ; fi \
@@ -109,6 +114,17 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     && ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/bin/docker-compose \
     && which docker-compose \
     && docker compose version
+
+# We place the scripts in `/usr/bin` so that users who extend this image can
+# override them with scripts of the same name placed in `/usr/local/bin`.
+COPY entrypoint.sh startup.sh logger.sh graceful-stop.sh update-status /usr/bin/
+
+# Copy the docker shim which propagates the docker MTU to underlying networks
+# to replace the docker binary in the PATH.
+COPY docker-shim.sh /usr/local/bin/docker
+
+# Configure hooks folder structure.
+COPY hooks /etc/arc/hooks/
 
 # Add the Python "User Script Directory" to the PATH
 ENV PATH="${PATH}:${HOME}/.local/bin/"
