@@ -1,4 +1,4 @@
-FROM summerwind/actions-runner::ubuntu-20.04
+FROM summerwind/actions-runner:ubuntu-20.04
 
 USER root
 
