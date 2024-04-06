@@ -4,6 +4,6 @@ USER root
 
 RUN pip install -U Jinja2
 RUN apt-get install build-essential
-RUN apt -y install fuse
+RUN pip install fuse-python
 
 USER runner
