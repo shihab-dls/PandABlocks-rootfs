@@ -4,6 +4,6 @@ USER root
 
 RUN pip install -U Jinja2
 RUN apt-get install build-essential
-RUN apt-get -y install fuse3
+RUN apt -y install fuse3
 
 USER runner
