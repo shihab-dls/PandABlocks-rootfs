@@ -14,6 +14,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ENV UID=1000
 ENV GID=0
 ENV USERNAME="runner"
+ENV DEBIAN_FRONTEND=noninteractive
 
 # This is to mimic the OpenShift behaviour of adding the dynamic user to group 0.
 RUN useradd -G 0 $USERNAME
@@ -40,12 +41,10 @@ RUN curl -f -L -o runner-container-hooks.zip https://github.com/actions/runner-c
     && unzip ./runner-container-hooks.zip -d ./k8s \
     && rm runner-container-hooks.zip
 
+# Runner user
 RUN adduser --disabled-password --gecos "" --uid 1000 runner \
-    && groupadd docker --gid $DOCKER_GID \
-    && usermod -aG sudo runner \
-    && usermod -aG docker runner \
-    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
-    && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
+  && usermod -aG sudo runner \
+  && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers
 
 # Host dependencies 
 RUN yum -y upgrade && yum -y install \
