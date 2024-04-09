@@ -42,7 +42,7 @@ RUN curl -f -L -o runner-container-hooks.zip https://github.com/actions/runner-c
     && rm runner-container-hooks.zip
 
 # Runner user
-RUN adduser --disabled-password --gecos "" --uid 1000 runner \
+RUN adduser --gecos "" --uid 1000 runner \
   && usermod -aG sudo runner \
   && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers
 
