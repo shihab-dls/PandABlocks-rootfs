@@ -42,8 +42,8 @@ RUN curl -f -L -o runner-container-hooks.zip https://github.com/actions/runner-c
     && rm runner-container-hooks.zip
 
 # Runner user
-RUN usermod -aG sudo runner \
-  && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers
+RUN usermod -aG wheek runner \
+  && echo "%wheel   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers
 
 # Host dependencies 
 RUN yum -y upgrade && yum -y install \
