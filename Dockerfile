@@ -2,8 +2,6 @@
 
 FROM rockylinux:8.5
 
-RUN pwd
-
 # Arguments
 ARG TARGETPLATFORM=linux/amd64
 ARG RUNNER_VERSION=2.314.1
@@ -85,11 +83,9 @@ COPY annotypes /annotypes
 COPY pymalcolm /pymalcolm
 COPY malcolmjs /malcolmjs
 
-RUN pwd
-
 # Toolchains and tar files
-RUN bash scripts/GNU-toolchain.sh
-RUN bash scripts/tar-files.sh
+RUN bash ../scripts/GNU-toolchain.sh
+RUN bash ../scripts/tar-files.sh
 
 # For the documentation
 RUN pip3 install matplotlib \ 
