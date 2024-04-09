@@ -3,9 +3,9 @@
 FROM rockylinux:8.5
 
 # Arguments
-ARG TARGETPLATFORM=linux/amd64
-ARG RUNNER_VERSION=2.314.1
-ARG RUNNER_CONTAINER_HOOKS_VERSION=0.6.0
+ARG TARGETPLATFORM
+ARG RUNNER_VERSION
+ARG RUNNER_CONTAINER_HOOKS_VERSION
 
 # Shell setup
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -41,7 +41,7 @@ RUN curl -f -L -o runner-container-hooks.zip https://github.com/actions/runner-c
     && unzip ./runner-container-hooks.zip -d ./k8s \
     && rm runner-container-hooks.zip
 
-# Runner user
+# Add to sudoer
 RUN usermod -aG wheel runner \
   && echo "%wheel   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers
 
