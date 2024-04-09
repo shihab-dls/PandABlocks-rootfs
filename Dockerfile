@@ -95,7 +95,7 @@ RUN pip3 install matplotlib \
     --upgrade docutils==0.16
 
 # Create config file for dls-rootfs
-RUN bash scripts/config-file-rootfs.sh
+RUN bash ../scripts/config-file-rootfs.sh
 
 # Error can't find python
 RUN ln -s /usr/bin/python3 /usr/bin/python
