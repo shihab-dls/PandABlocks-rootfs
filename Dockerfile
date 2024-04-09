@@ -42,7 +42,7 @@ RUN curl -f -L -o runner-container-hooks.zip https://github.com/actions/runner-c
     && rm runner-container-hooks.zip
 
 # Runner user
-RUN usermod -aG wheek runner \
+RUN usermod -aG wheel runner \
   && echo "%wheel   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers
 
 # Host dependencies 
