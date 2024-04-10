@@ -54,7 +54,7 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
     apt-get install -y --no-install-recommends git-lfs
 
 # Download PandABlocks Depens
-RUN apt-get update -y \
+RUN apt-get update \
     apt-get install build-essentials -y \
     apt-get install libtinfo5 -y
 
