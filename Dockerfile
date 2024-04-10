@@ -115,14 +115,7 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
 
 # We place the scripts in `/usr/bin` so that users who extend this image can
 # override them with scripts of the same name placed in `/usr/local/bin`.
-COPY entrypoint.sh startup.sh logger.sh graceful-stop.sh update-status /usr/bin/
-
-# Copy the docker shim which propagates the docker MTU to underlying networks
-# to replace the docker binary in the PATH.
-COPY docker-shim.sh /usr/local/bin/docker
-
-# Configure hooks folder structure.
-COPY hooks /etc/arc/hooks/
+# COPY entrypoint.sh startup.sh logger.sh graceful-stop.sh update-status /usr/bin/
 
 # Add the Python "User Script Directory" to the PATH
 ENV PATH="${PATH}:${HOME}/.local/bin/"
