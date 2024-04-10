@@ -15,8 +15,7 @@ COPY malcolmjs /malcolmjs
 # Toolchains and tar files
 RUN bash scripts/GNU-toolchain.sh
 RUN bash scripts/tar-files.sh
-RUN apt install libtinfo-dev
-RUN ln -s /lib/x86_64-linux-gnu/libtinfo.so.6 /lib/x86_64-linux-gnu/libtinfo.so.5
+RUN apt-get install libtinfo5
 
 USER runner
 
