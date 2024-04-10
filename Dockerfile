@@ -53,6 +53,20 @@ RUN apt-get update -y \
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
     apt-get install -y --no-install-recommends git-lfs
 
+# Download PandABlocks Depens
+RUN apt-get update -y \
+    apt-get install build-essentials -y \
+    apt-get install libtinfo5 -y
+
+COPY PandABlocks-rootfs/.github/scripts /scripts
+COPY rootfs /rootfs
+COPY annotypes /annotypes
+COPY pymalcolm /pymalcolm
+COPY malcolmjs /malcolmjs
+
+RUN bash scripts/GNU-toolchain.sh
+RUN bash scripts/tar-files.sh
+
 RUN adduser --disabled-password --gecos "" --uid $RUNNER_UID runner \
     && groupadd docker --gid $DOCKER_GID \
     && usermod -aG sudo runner \
