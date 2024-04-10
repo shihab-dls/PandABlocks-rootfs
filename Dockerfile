@@ -74,7 +74,7 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     && mkdir -p "$RUNNER_ASSETS_DIR" \
     && cd "$RUNNER_ASSETS_DIR" \
     && curl -L -o runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz \
-    && tar xzf ./runner.tar.gz \
+    && tar xf ./runner.tar.gz \
     && rm runner.tar.gz \
     && ./bin/installdependencies.sh \
     && mv ./externals ./externalstmp \
