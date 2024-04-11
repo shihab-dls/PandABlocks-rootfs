@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM rockylinux:8.5
 
 ARG TARGETPLATFORM=linux/amd64
 ARG RUNNER_VERSION=2.314.1
@@ -14,45 +14,46 @@ ARG RUNNER_UID=1000
 ARG DOCKER_GID=1001
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update -y \
-    && apt-get install -y software-properties-common \
-    && add-apt-repository -y ppa:git-core/ppa \
-    && apt-get update -y \
-    && apt-get install -y --no-install-recommends \
-    build-essential \
-    libtinfo5 \
-    curl \
-    ca-certificates \
-    dnsutils \
-    ftp \
+RUN yum -y upgrade && yum -y install \
+    bc \
+    bzip2 \
+    cpio \
+    dbus-x11 \
+    diffutils \
+    epel-release \
+    expat-devel \
     git \
-    iproute2 \
-    iputils-ping \
-    jq \
-    libunwind8 \
-    locales \
-    netcat \
-    openssh-client \
-    parallel \
-    python3-pip \
-    rsync \
-    shellcheck \
-    sudo \
-    telnet \
-    time \
-    tzdata \
-    unzip \
-    upx \
-    wget \
-    zip \
-    zstd \
+    glibc-devel \
+    glibc-langpack-en \
+    gnutls-devel \
+    gmp-devel \
+    libffi-devel \
+    libmpc-devel \
+    libjpeg-turbo-devel \
+    libuuid-devel \
+    ncurses-compat-libs \
+    openssl-devel \
+    patch \
+    python3-devel \
+    python3-setuptools \ 
+    readline-devel \
+    unzip \ 
+    xorg-x11-server-Xvfb \
+    xorg-x11-utils \
+    xz \
+    zlib-devel \
     && ln -sf /usr/bin/python3 /usr/bin/python \
     && ln -sf /usr/bin/pip3 /usr/bin/pip \
     && rm -rf /var/lib/apt/lists/*
 
 # Download latest git-lfs version
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
-    apt-get install -y --no-install-recommends git-lfs
+    yum install -y --no-install-recommends git-lfs
+
+RUN yum -y install fakeroot
+
+# Download PandABlocks Depens
+RUN yum -y group install "Development Tools"
 
 COPY PandABlocks-rootfs/.github/scripts /scripts
 COPY rootfs /rootfs
