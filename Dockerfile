@@ -57,7 +57,7 @@ COPY annotypes /annotypes
 COPY pymalcolm /pymalcolm
 COPY malcolmjs /malcolmjs
 
-RUN adduser --gecos "" --uid $RUNNER_UID runner \
+RUN adduser --comment "" --uid $RUNNER_UID runner \
     && groupadd docker --gid $DOCKER_GID \
     && usermod -aG sudo runner \
     && usermod -aG docker runner \
