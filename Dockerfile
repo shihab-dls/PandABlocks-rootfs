@@ -59,7 +59,7 @@ COPY malcolmjs /malcolmjs
 
 RUN adduser --comment "" --uid $RUNNER_UID runner \
     && groupadd docker --gid $DOCKER_GID \
-    && usermod -aG sudo runner \
+    && usermod -aG wheel runner \
     && usermod -aG docker runner \
     && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
