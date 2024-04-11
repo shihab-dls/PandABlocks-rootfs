@@ -46,10 +46,6 @@ RUN yum -y upgrade && yum -y install \
     && ln -sf /usr/bin/pip3 /usr/bin/pip \
     && rm -rf /var/lib/apt/lists/*
 
-# Download latest git-lfs version
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
-    yum install -y --no-install-recommends git-lfs
-
 RUN yum -y install fakeroot
 
 # Download PandABlocks Depens
@@ -91,7 +87,7 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     # libyaml-dev is required for ruby/setup-ruby action.
     # It is installed after installdependencies.sh and before removing /var/lib/apt/lists
     # to avoid rerunning apt-update on its own.
-    && apt-get install -y libyaml-dev \
+    && yum install -y libyaml-dev \
     && rm -rf /var/lib/apt/lists/*
 
 ENV RUNNER_TOOL_CACHE=/opt/hostedtoolcache
