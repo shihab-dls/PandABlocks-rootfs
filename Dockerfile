@@ -20,6 +20,7 @@ RUN apt-get update -y \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends \
     build-essential \
+    libtinfo5 \
     curl \
     ca-certificates \
     dnsutils \
@@ -52,10 +53,6 @@ RUN apt-get update -y \
 # Download latest git-lfs version
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
     apt-get install -y --no-install-recommends git-lfs
-
-# Download PandABlocks Depens
-RUN apt-get install build-essential -y
-RUN apt-get install libtinfo5 -y
 
 COPY PandABlocks-rootfs/.github/scripts /scripts
 COPY rootfs /rootfs
