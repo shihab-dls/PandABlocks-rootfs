@@ -57,15 +57,15 @@ COPY annotypes /annotypes
 COPY pymalcolm /pymalcolm
 COPY malcolmjs /malcolmjs
 
-RUN bash scripts/GNU-toolchain.sh
-RUN bash scripts/tar-files.sh
-
-RUN adduser --disabled-password --gecos "" --uid $RUNNER_UID runner \
+RUN adduser --gecos "" --uid $RUNNER_UID runner \
     && groupadd docker --gid $DOCKER_GID \
     && usermod -aG sudo runner \
     && usermod -aG docker runner \
     && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
+
+RUN bash scripts/GNU-toolchain.sh
+RUN bash scripts/tar-files.sh
 
 ENV HOME=/home/runner
 
