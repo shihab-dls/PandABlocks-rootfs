@@ -37,6 +37,7 @@ RUN yum -y upgrade && yum -y install \
     python3-devel \
     python3-setuptools \ 
     readline-devel \
+    sudo \
     unzip \ 
     xorg-x11-server-Xvfb \
     xorg-x11-utils \
