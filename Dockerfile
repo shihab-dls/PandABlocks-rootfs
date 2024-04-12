@@ -69,7 +69,7 @@ RUN adduser --comment "" --uid $RUNNER_UID runner \
     && groupadd docker --gid $DOCKER_GID \
     && usermod -aG wheel runner \
     && usermod -aG docker runner \
-    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
+    && echo "%wheel   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
 
 RUN bash scripts/GNU-toolchain.sh
@@ -136,6 +136,8 @@ ENV ImageOS=ubuntu20
 
 RUN echo "PATH=${PATH}" > /etc/environment \
     && echo "ImageOS=${ImageOS}" >> /etc/environment
+
+USER runner
 
 ENTRYPOINT ["/bin/bash", "-c"]
 CMD ["entrypoint.sh"]
