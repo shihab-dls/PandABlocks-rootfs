@@ -48,10 +48,10 @@ RUN yum -y upgrade && yum -y install \
     && ln -sf /usr/bin/pip3 /usr/bin/pip \
     && rm -rf /var/lib/apt/lists/*
 
-RUN yum -y install openssl-devel curl-devel expat-devel gettext-devel zlib-devel perl-ExtUtils-MakeMaker gcc make
-RUN wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.43.2.tar.gz
-RUN tar -xf git-2.43.2.tar.gz -C /opt
-RUN cd /opt/git-2.43.2 && make prefix=/usr/local all install
+#RUN yum -y install openssl-devel curl-devel expat-devel gettext-devel zlib-devel #perl-ExtUtils-MakeMaker gcc make
+#RUN wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.43.2.tar.gz
+#RUN tar -xf git-2.43.2.tar.gz -C /opt
+#RUN cd /opt/git-2.43.2 && make prefix=/usr/local all install
 
 
 RUN yum -y install fakeroot
