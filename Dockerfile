@@ -131,6 +131,6 @@ RUN echo "PATH=${PATH}" > /etc/environment \
     && echo "ImageOS=${ImageOS}" >> /etc/environment
 
 USER runner
+WORKDIR /repos
 
-ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["entrypoint.sh"]
+CMD ["/bin/bash"]
