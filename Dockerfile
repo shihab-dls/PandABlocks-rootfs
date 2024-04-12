@@ -138,4 +138,6 @@ RUN echo "PATH=${PATH}" > /etc/environment \
     && echo "ImageOS=${ImageOS}" >> /etc/environment
 
 USER runner
-CMD ["/bin/bash"]
+
+ENTRYPOINT ["/bin/bash", "-c"]
+CMD ["entrypoint.sh"]
