@@ -14,7 +14,7 @@ ARG RUNNER_UID=1000
 ARG DOCKER_GID=1001
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN yum -y upgrade && yum -y install \
+RUN yum -y upgrade && yum -y update && yum -y install \
     bc \
     bzip2 \
     cpio \
