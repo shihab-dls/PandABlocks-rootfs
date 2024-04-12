@@ -60,7 +60,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: shihabdls/pandablocks-container
+          images: shihabdls/original-pandablocks
           tags: |
             type=ref,event=branch
             type=ref,event=tag
