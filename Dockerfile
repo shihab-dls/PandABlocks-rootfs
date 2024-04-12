@@ -131,6 +131,4 @@ RUN echo "PATH=${PATH}" > /etc/environment \
     && echo "ImageOS=${ImageOS}" >> /etc/environment
 
 USER runner
-WORKDIR /repos
-
 CMD ["/bin/bash"]
