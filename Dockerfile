@@ -137,7 +137,5 @@ ENV ImageOS=ubuntu20
 RUN echo "PATH=${PATH}" > /etc/environment \
     && echo "ImageOS=${ImageOS}" >> /etc/environment
 
-USER runner
-
 ENTRYPOINT ["/bin/bash", "-c"]
 CMD ["entrypoint.sh"]
