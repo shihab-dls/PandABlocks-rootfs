@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM rockylinux:9
 
 ARG TARGETPLATFORM=linux/amd64
 ARG RUNNER_VERSION=2.314.1
@@ -14,41 +14,34 @@ ARG RUNNER_UID=1000
 ARG DOCKER_GID=1001
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update -y \
-    && apt-get install -y software-properties-common \
-    && add-apt-repository -y ppa:git-core/ppa \
-    && apt-get update -y \
-    && apt-get install -y --no-install-recommends \
-    build-essential \
-    libtinfo5 \
-    curl \
-    ca-certificates \
-    dnsutils \
-    ftp \
+RUN yum -y upgrade && yum -y install \
+    bc \
+    bzip2 \
+    cpio \
+    dbus-x11 \
+    diffutils \
+    epel-release \
+    expat-devel \
     git \
-    iproute2 \
-    iputils-ping \
-    jq \
-    libunwind8 \
-    locales \
-    netcat \
-    openssh-client \
-    parallel \
-    python3-pip \
-    rsync \
-    shellcheck \
-    sudo \
-    telnet \
-    time \
-    tzdata \
-    unzip \
-    upx \
-    wget \
-    zip \
-    zstd \
-    && ln -sf /usr/bin/python3 /usr/bin/python \
-    && ln -sf /usr/bin/pip3 /usr/bin/pip \
-    && rm -rf /var/lib/apt/lists/*
+    glibc-devel \
+    glibc-langpack-en \
+    gnutls-devel \
+    gmp-devel \
+    libffi-devel \
+    libmpc-devel \
+    libjpeg-turbo-devel \
+    libuuid-devel \
+    ncurses-compat-libs \
+    openssl-devel \
+    patch \
+    python3-devel \
+    python3-setuptools \ 
+    readline-devel \
+    unzip \ 
+    xorg-x11-server-Xvfb \
+    xorg-x11-utils \
+    xz \
+    zlib-devel
 
 COPY PandABlocks-rootfs/.github/scripts /scripts
 COPY rootfs /rootfs
@@ -82,12 +75,10 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     && curl -fLo runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz \
     && tar xzf ./runner.tar.gz \
     && rm -f runner.tar.gz \
-    && ./bin/installdependencies.sh \
+    && ./bin/installdependencies.sh
     # libyaml-dev is required for ruby/setup-ruby action.
     # It is installed after installdependencies.sh and before removing /var/lib/apt/lists
     # to avoid rerunning apt-update on its own.
-    && apt-get install -y libyaml-dev \
-    && rm -rf /var/lib/apt/lists/*
 
 ENV RUNNER_TOOL_CACHE=/opt/hostedtoolcache
 RUN mkdir /opt/hostedtoolcache \
