@@ -31,7 +31,6 @@ RUN yum -y upgrade && yum -y install \
     libmpc-devel \
     libjpeg-turbo-devel \
     libuuid-devel \
-    ncurses-compat-libs \
     openssl-devel \
     patch \
     python3-devel \
