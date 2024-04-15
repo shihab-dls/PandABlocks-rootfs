@@ -112,27 +112,6 @@ RUN set -vx; \
     && install -o root -g root -m 755 docker/docker /usr/bin/docker \
     && rm -rf docker docker.tgz
 
-RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
-    && if [ "$ARCH" = "arm64" ]; then export ARCH=aarch64 ; fi \
-    && if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "i386" ]; then export ARCH=x86_64 ; fi \
-    && mkdir -p /usr/libexec/docker/cli-plugins \
-    && curl -fLo /usr/libexec/docker/cli-plugins/docker-compose https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-linux-${ARCH} \
-    && chmod +x /usr/libexec/docker/cli-plugins/docker-compose \
-    && ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/bin/docker-compose \
-    && which docker-compose \
-    && docker compose version
-
-# We place the scripts in `/usr/bin` so that users who extend this image can
-# override them with scripts of the same name placed in `/usr/local/bin`.
-# COPY entrypoint.sh startup.sh logger.sh graceful-stop.sh update-status /usr/bin/
-
-# Add the Python "User Script Directory" to the PATH
-ENV PATH="${PATH}:${HOME}/.local/bin/"
-ENV ImageOS=ubuntu20
-
-RUN echo "PATH=${PATH}" > /etc/environment \
-    && echo "ImageOS=${ImageOS}" >> /etc/environment
-
 USER runner
 
 CMD ["/bin/bash"]
