@@ -1,4 +1,4 @@
-FROM rockylinux:9
+FROM ubuntu:18.04
 
 ARG TARGETPLATFORM=linux/amd64
 ARG RUNNER_VERSION=2.314.1
@@ -14,33 +14,41 @@ ARG RUNNER_UID=1000
 ARG DOCKER_GID=1001
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN yum -y upgrade && yum -y install \
-    bc \
-    bzip2 \
-    cpio \
-    dbus-x11 \
-    diffutils \
-    epel-release \
-    expat-devel \
+RUN apt-get update -y \
+    && apt-get install -y software-properties-common \
+    && add-apt-repository -y ppa:git-core/ppa \
+    && apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+    build-essential \
+    libtinfo5 \
+    curl \
+    ca-certificates \
+    dnsutils \
+    ftp \
     git \
-    glibc-devel \
-    glibc-langpack-en \
-    gnutls-devel \
-    gmp-devel \
-    libffi-devel \
-    libmpc-devel \
-    libjpeg-turbo-devel \
-    libuuid-devel \
-    openssl-devel \
-    patch \
-    python3-devel \
-    python3-setuptools \ 
-    readline-devel \
-    unzip \ 
-    xorg-x11-server-Xvfb \
-    xorg-x11-utils \
-    xz \
-    zlib-devel
+    iproute2 \
+    iputils-ping \
+    jq \
+    libunwind8 \
+    locales \
+    netcat \
+    openssh-client \
+    parallel \
+    python3-pip \
+    rsync \
+    shellcheck \
+    sudo \
+    telnet \
+    time \
+    tzdata \
+    unzip \
+    upx \
+    wget \
+    zip \
+    zstd \
+    && ln -sf /usr/bin/python3 /usr/bin/python \
+    && ln -sf /usr/bin/pip3 /usr/bin/pip \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY PandABlocks-rootfs/.github/scripts /scripts
 COPY rootfs /rootfs
@@ -51,11 +59,11 @@ COPY malcolmjs /malcolmjs
 RUN bash scripts/GNU-toolchain.sh
 RUN bash scripts/tar-files.sh
 
-RUN adduser --comment "" --uid $RUNNER_UID runner \
+RUN adduser --disabled-password --gecos "" --uid $RUNNER_UID runner \
     && groupadd docker --gid $DOCKER_GID \
-    && usermod -aG wheel runner \
+    && usermod -aG sudo runner \
     && usermod -aG docker runner \
-    && echo "%wheel   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
+    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
 
 ENV HOME=/home/runner
@@ -74,10 +82,12 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     && curl -fLo runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz \
     && tar xzf ./runner.tar.gz \
     && rm -f runner.tar.gz \
-    && ./bin/installdependencies.sh
+    && ./bin/installdependencies.sh \
     # libyaml-dev is required for ruby/setup-ruby action.
     # It is installed after installdependencies.sh and before removing /var/lib/apt/lists
     # to avoid rerunning apt-update on its own.
+    && apt-get install -y libyaml-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV RUNNER_TOOL_CACHE=/opt/hostedtoolcache
 RUN mkdir /opt/hostedtoolcache \
