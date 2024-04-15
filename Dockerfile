@@ -135,5 +135,4 @@ RUN echo "PATH=${PATH}" > /etc/environment \
 
 USER runner
 
-ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["entrypoint.sh"]
+CMD ["/bin/bash"]
