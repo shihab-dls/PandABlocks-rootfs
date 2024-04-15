@@ -132,11 +132,12 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
 
 # Add the Python "User Script Directory" to the PATH
 ENV PATH="${PATH}:${HOME}/.local/bin/"
-ENV ImageOS=ubuntu20
+ENV ImageOS=rockylinux
 
 RUN echo "PATH=${PATH}" > /etc/environment \
     && echo "ImageOS=${ImageOS}" >> /etc/environment
 
 USER runner
 
-CMD ["/bin/bash"]
+ENTRYPOINT ["/bin/bash", "-c"]
+CMD ["entrypoint.sh"]
