@@ -51,11 +51,11 @@ COPY malcolmjs /malcolmjs
 RUN bash scripts/GNU-toolchain.sh
 RUN bash scripts/tar-files.sh
 
-RUN adduser --disabled-password --gecos "" --uid $RUNNER_UID runner \
+RUN adduser --comment "" --uid $RUNNER_UID runner \
     && groupadd docker --gid $DOCKER_GID \
-    && usermod -aG sudo runner \
+    && usermod -aG wheel runner \
     && usermod -aG docker runner \
-    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
+    && echo "%wheel   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
 
 ENV HOME=/home/runner
