@@ -1,141 +1,58 @@
-FROM rockylinux:8.5
+# ./Dockerfile
 
+FROM registry.access.redhat.com/ubi9/ubi-init:9.3
+
+# Arguments
 ARG TARGETPLATFORM=linux/amd64
 ARG RUNNER_VERSION=2.314.1
 ARG RUNNER_CONTAINER_HOOKS_VERSION=0.6.0
-# Docker and Docker Compose arguments
-ARG CHANNEL=stable
-ARG DOCKER_VERSION=24.0.7
-ARG DOCKER_COMPOSE_VERSION=v2.23.0
-ARG DUMB_INIT_VERSION=1.2.5
 
-# Use 1001 and 121 for compatibility with GitHub-hosted runners
-ARG RUNNER_UID=1000
-ARG DOCKER_GID=1001
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-ENV DEBIAN_FRONTEND=noninteractive
-RUN yum -y upgrade && yum -y update && yum -y install \
-    bc \
-    bzip2 \
-    cpio \
-    dbus-x11 \
-    diffutils \
-    epel-release \
-    expat-devel \
-    git \
-    glibc-devel \
-    glibc-langpack-en \
-    gnutls-devel \
-    gmp-devel \
-    libffi-devel \
-    libmpc-devel \
-    libjpeg-turbo-devel \
-    libuuid-devel \
-    ncurses-compat-libs \
-    openssl-devel \
-    patch \
-    python3-devel \
-    python3-setuptools \ 
-    readline-devel \
-    sudo \
-    unzip \
-    wget \ 
-    xorg-x11-server-Xvfb \
-    xorg-x11-utils \
-    xz \
-    zlib-devel \
-    && ln -sf /usr/bin/python3 /usr/bin/python \
-    && ln -sf /usr/bin/pip3 /usr/bin/pip \
-    && rm -rf /var/lib/apt/lists/*
+# The UID env var should be used in child Containerfile.
+ENV UID=1000
+ENV GID=0
+ENV USERNAME="runner"
 
-RUN yum -y install openssl-devel curl-devel expat-devel gettext-devel zlib-devel perl-ExtUtils-MakeMaker gcc make
-RUN wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.43.2.tar.gz
-RUN tar -xf git-2.43.2.tar.gz -C /opt
-RUN cd /opt/git-2.43.2 && make prefix=/usr/local all install
+# This is to mimic the OpenShift behaviour of adding the dynamic user to group 0.
+RUN useradd -G 0 $USERNAME
+ENV HOME /home/${USERNAME}
 
+# Make and set the working directory
+RUN mkdir -p /actions-runner \
+    && chown -R $USERNAME:$GID /actions-runner
+WORKDIR /actions-runner
 
-RUN yum -y install fakeroot
-
-# Download PandABlocks Depens
-RUN yum -y group install "Development Tools"
-
-COPY PandABlocks-rootfs/.github/scripts /scripts
-COPY rootfs /rootfs
-COPY annotypes /annotypes
-COPY pymalcolm /pymalcolm
-COPY malcolmjs /malcolmjs
-
-RUN adduser --comment "" --uid $RUNNER_UID runner \
-    && groupadd docker --gid $DOCKER_GID \
-    && usermod -aG wheel runner \
-    && usermod -aG docker runner \
-    && echo "%wheel   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
-    && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
-
-RUN bash scripts/GNU-toolchain.sh
-RUN bash scripts/tar-files.sh
-
-ENV HOME=/home/runner
-
+# Runner download supports amd64 as x64
 RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
-    && if [ "$ARCH" = "arm64" ]; then export ARCH=aarch64 ; fi \
-    && if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "i386" ]; then export ARCH=x86_64 ; fi \
-    && curl -fLo /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v${DUMB_INIT_VERSION}/dumb-init_${DUMB_INIT_VERSION}_${ARCH} \
-    && chmod +x /usr/bin/dumb-init
-
-ENV RUNNER_ASSETS_DIR=/runnertmp
-RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
-    && if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "x86_64" ] || [ "$ARCH" = "i386" ]; then export ARCH=x64 ; fi \
-    && mkdir -p "$RUNNER_ASSETS_DIR" \
-    && cd "$RUNNER_ASSETS_DIR" \
-    && curl -fLo runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz \
+    && if [ "$ARCH" = "amd64" ]; then export ARCH=x64 ; fi \
+    && curl -L -o runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz \
     && tar xzf ./runner.tar.gz \
-    && rm -f runner.tar.gz \
+    && rm runner.tar.gz \
     && ./bin/installdependencies.sh \
-    # libyaml-dev is required for ruby/setup-ruby action.
-    # It is installed after installdependencies.sh and before removing /var/lib/apt/lists
-    # to avoid rerunning apt-update on its own.
-    && rm -rf /var/lib/apt/lists/*
+    && dnf clean all
 
-ENV RUNNER_TOOL_CACHE=/opt/hostedtoolcache
-RUN mkdir /opt/hostedtoolcache \
-    && chgrp docker /opt/hostedtoolcache \
-    && chmod g+rwx /opt/hostedtoolcache
-
-RUN cd "$RUNNER_ASSETS_DIR" \
-    && curl -fLo runner-container-hooks.zip https://github.com/actions/runner-container-hooks/releases/download/v${RUNNER_CONTAINER_HOOKS_VERSION}/actions-runner-hooks-k8s-${RUNNER_CONTAINER_HOOKS_VERSION}.zip \
+# Install container hooks
+RUN curl -f -L -o runner-container-hooks.zip https://github.com/actions/runner-container-hooks/releases/download/v${RUNNER_CONTAINER_HOOKS_VERSION}/actions-runner-hooks-k8s-${RUNNER_CONTAINER_HOOKS_VERSION}.zip \
     && unzip ./runner-container-hooks.zip -d ./k8s \
-    && rm -f runner-container-hooks.zip
+    && rm runner-container-hooks.zip
 
-RUN set -vx; \
-    export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
-    && if [ "$ARCH" = "arm64" ]; then export ARCH=aarch64 ; fi \
-    && if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "i386" ]; then export ARCH=x86_64 ; fi \
-    && curl -fLo docker.tgz https://download.docker.com/linux/static/${CHANNEL}/${ARCH}/docker-${DOCKER_VERSION}.tgz \
-    && tar zxvf docker.tgz \
-    && install -o root -g root -m 755 docker/docker /usr/bin/docker \
-    && rm -rf docker docker.tgz
+# Runner user
+RUN adduser --disabled-password --gecos "" --uid 1000 runner \
+  && usermod -aG sudo runner \
+  && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers
 
-RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
-    && if [ "$ARCH" = "arm64" ]; then export ARCH=aarch64 ; fi \
-    && if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "i386" ]; then export ARCH=x86_64 ; fi \
-    && mkdir -p /usr/libexec/docker/cli-plugins \
-    && curl -fLo /usr/libexec/docker/cli-plugins/docker-compose https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-linux-${ARCH} \
-    && chmod +x /usr/libexec/docker/cli-plugins/docker-compose \
-    && ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/bin/docker-compose \
-    && which docker-compose \
-    && docker compose version
+RUN dnf update -y \
+    && dnf install -y \
+    git \
+    jq \
+    && dnf clean all
 
-# We place the scripts in `/usr/bin` so that users who extend this image can
-# override them with scripts of the same name placed in `/usr/local/bin`.
-# COPY entrypoint.sh startup.sh logger.sh graceful-stop.sh update-status /usr/bin/
+# Install helm using the in-line curl to bash method
+RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-# Add the Python "User Script Directory" to the PATH
-ENV PATH="${PATH}:${HOME}/.local/bin/"
+# Use an install script to install the `gh` cli, more about that below!
+COPY images/software/gh-cli.sh gh-cli.sh
+RUN bash gh-cli.sh && rm gh-cli.sh
 
-RUN echo "PATH=${PATH}" > /etc/environment
 
-USER runner
-
-ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["entrypoint.sh"]
