@@ -73,7 +73,7 @@ jobs:
         with:
           context: . 
           file: ./PandABlocks-rootfs/Dockerfile
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: v2
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           push: ${{ github.event_name != 'pull_request' }}

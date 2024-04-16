@@ -43,6 +43,10 @@ RUN yum -y upgrade && yum -y install \
     xz \
     zlib-devel
 
+RUN yum -y group install "Development Tools"
+
+RUN yum -y install fakeroot
+
 COPY PandABlocks-rootfs/.github/scripts /scripts
 COPY rootfs /rootfs
 COPY annotypes /annotypes
