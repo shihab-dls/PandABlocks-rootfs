@@ -43,6 +43,10 @@ RUN yum -y upgrade && yum -y install \
     xz \
     zlib-devel
 
+RUN yum -y group install "Development Tools"
+RUN yum -y install python-jinja2
+RUN yum -y install fakeroot
+
 COPY PandABlocks-rootfs/.github/scripts /scripts
 COPY rootfs /rootfs
 COPY annotypes /annotypes
@@ -51,6 +55,12 @@ COPY malcolmjs /malcolmjs
 
 RUN bash scripts/GNU-toolchain.sh
 RUN bash scripts/tar-files.sh
+
+RUN bash scripts/config-file-rootfs.sh
+
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+RUN git config --global --add safe.directory '*'
 
 RUN adduser --comment "" --uid $RUNNER_UID runner \
     && groupadd docker --gid $DOCKER_GID \
