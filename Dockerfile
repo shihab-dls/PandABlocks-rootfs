@@ -90,6 +90,11 @@ RUN cd "$RUNNER_ASSETS_DIR" \
     && unzip ./runner-container-hooks.zip -d ./k8s \
     && rm -f runner-container-hooks.zip
 
+
+ENV PATH="${PATH}:${HOME}/.local/bin/"
+RUN echo "PATH=${PATH}" > /etc/environment
+
 USER runner
 
-CMD ["/bin/bash"]
+ENTRYPOINT ["/bin/bash", "-c"]
+CMD ["entrypoint.sh"]
