@@ -1,4 +1,4 @@
-FROM rockylinux:9
+FROM rockylinux:8.5
 
 ARG TARGETPLATFORM=linux/amd64
 ARG RUNNER_VERSION=2.314.1
@@ -31,6 +31,7 @@ RUN yum -y upgrade && yum -y install \
     libmpc-devel \
     libjpeg-turbo-devel \
     libuuid-devel \
+    ncurses-compat-libs \
     openssl-devel \
     patch \
     python3-devel \
@@ -44,7 +45,7 @@ RUN yum -y upgrade && yum -y install \
     zlib-devel
 
 RUN yum -y group install "Development Tools"
-RUN yum -y install python-jinja2
+
 RUN yum -y install fakeroot
 
 COPY PandABlocks-rootfs/.github/scripts /scripts
@@ -55,6 +56,13 @@ COPY malcolmjs /malcolmjs
 
 RUN bash scripts/GNU-toolchain.sh
 RUN bash scripts/tar-files.sh
+
+# For the documentation
+RUN pip3 install matplotlib \ 
+    rst2pdf \
+    sphinx \
+    sphinx-rtd-theme \
+    --upgrade docutils==0.16
 
 RUN bash scripts/config-file-rootfs.sh
 
