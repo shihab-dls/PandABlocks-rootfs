@@ -112,7 +112,5 @@ RUN cd "$RUNNER_ASSETS_DIR" \
 ENV PATH="${PATH}:${HOME}/.local/bin/"
 RUN echo "PATH=${PATH}" > /etc/environment
 
-USER runner
-
 ENTRYPOINT ["/bin/bash", "-c"]
 CMD ["entrypoint.sh"]
