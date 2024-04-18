@@ -63,7 +63,7 @@ COPY pymalcolm /pymalcolm
 COPY malcolmjs /malcolmjs
 
 RUN bash scripts/GNU-toolchain.sh
-RUN chmod 777 scripts/tar-files.sh
+RUN chmod runner scripts/tar-files.sh
 USER runner
 RUN bash scripts/tar-files.sh
 USER root
