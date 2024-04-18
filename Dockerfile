@@ -63,10 +63,9 @@ COPY pymalcolm /pymalcolm
 COPY malcolmjs /malcolmjs
 
 RUN bash scripts/GNU-toolchain.sh
-RUN chmod runner scripts/tar-files.sh
-USER runner
 RUN bash scripts/tar-files.sh
-USER root
+
+RUN chown -R runner:runner /tar-files
 
 # For the documentation
 RUN pip3 install matplotlib \ 
