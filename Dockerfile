@@ -48,6 +48,14 @@ RUN yum -y group install "Development Tools"
 
 RUN yum -y install fakeroot
 
+RUN adduser --comment "" --uid $RUNNER_UID runner \
+    && groupadd docker --gid $DOCKER_GID \
+    && usermod -aG wheel runner \
+    && usermod -aG wheel root \
+    && usermod -aG docker runner \
+    && echo "%wheel   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
+    && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
+
 COPY PandABlocks-rootfs/.github/scripts /scripts
 COPY rootfs /rootfs
 COPY annotypes /annotypes
@@ -55,7 +63,9 @@ COPY pymalcolm /pymalcolm
 COPY malcolmjs /malcolmjs
 
 RUN bash scripts/GNU-toolchain.sh
+USER runner
 RUN bash scripts/tar-files.sh
+USER root
 
 # For the documentation
 RUN pip3 install matplotlib \ 
@@ -69,14 +79,6 @@ RUN bash scripts/config-file-rootfs.sh
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 RUN git config --global --add safe.directory '*'
-
-RUN adduser --comment "" --uid $RUNNER_UID runner \
-    && groupadd docker --gid $DOCKER_GID \
-    && usermod -aG wheel runner \
-    && usermod -aG wheel root \
-    && usermod -aG docker runner \
-    && echo "%wheel   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
-    && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
 
 ENV HOME=/home/runner
 
