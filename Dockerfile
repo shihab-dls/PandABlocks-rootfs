@@ -113,6 +113,7 @@ RUN cd "$RUNNER_ASSETS_DIR" \
     && unzip ./runner-container-hooks.zip -d ./k8s \
     && rm -f runner-container-hooks.zip
 
+
 # Ensure local installations are accessible
 #ENV PATH="${PATH}:${HOME}/.local/bin/"
 #RUN echo "PATH=${PATH}" > /etc/environment
