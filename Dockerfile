@@ -1,4 +1,4 @@
-FROM rockylinux:8.5
+FROM rockylinux:9
 
 ARG TARGETPLATFORM=linux/amd64
 ARG RUNNER_VERSION=2.314.1
