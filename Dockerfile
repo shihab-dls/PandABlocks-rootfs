@@ -114,8 +114,8 @@ RUN cd "$RUNNER_ASSETS_DIR" \
     && rm -f runner-container-hooks.zip
 
 # Ensure local installations are accessible
-ENV PATH="${PATH}:${HOME}/.local/bin/"
-RUN echo "PATH=${PATH}" > /etc/environment
+#ENV PATH="${PATH}:${HOME}/.local/bin/"
+#RUN echo "PATH=${PATH}" > /etc/environment
 
 #Switch to runner
 USER runner
