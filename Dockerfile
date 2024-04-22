@@ -3,16 +3,17 @@ FROM rockylinux:9
 ARG TARGETPLATFORM=linux/amd64
 ARG RUNNER_VERSION=2.314.1
 ARG RUNNER_CONTAINER_HOOKS_VERSION=0.6.0
-# Args for docker/docker compose use
+# Docker and Docker Compose arguments
 ARG CHANNEL=stable
 ARG DOCKER_VERSION=24.0.7
 ARG DOCKER_COMPOSE_VERSION=v2.23.0
 ARG DUMB_INIT_VERSION=1.2.5
 
-# User UID set to a standard that is allocated to initial non-root unix users, to align with possible existing user management. 
-ARG RUNNER_UID=1000
+# User UID set to a standard that is allocated to initial non-root unix users, to align with possible existing user management. ARG RUNNER_UID=1000
+ARG DOCKER_GID=1001
 
 # Install necesary dependancies
+ENV DEBIAN_FRONTEND=noninteractive
 RUN yum -y upgrade && yum -y install \
     bc \
     bzip2 \
