@@ -1,4 +1,4 @@
-FROM rockylinux:8.7
+FROM rockylinux:8.5
 
 ARG TARGETPLATFORM=linux/amd64
 ARG RUNNER_VERSION=2.314.1
@@ -120,7 +120,7 @@ RUN cd "$RUNNER_ASSETS_DIR" \
 
 #Switch to runner
 USER runner
-
+WORKDIR /repos
 #Setup up entrypoint to run as bash and provides default
 ENTRYPOINT ["/bin/bash", "-c"]
 CMD ["entrypoint.sh"]
