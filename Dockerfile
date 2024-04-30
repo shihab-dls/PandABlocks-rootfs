@@ -80,7 +80,7 @@ RUN adduser --comment "" --uid $RUNNER_UID runner \
     && echo "%wheel   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
 
-ENV HOME=/
+ENV HOME=/home/runner
 
 RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     && if [ "$ARCH" = "arm64" ]; then export ARCH=aarch64 ; fi \
@@ -117,5 +117,5 @@ RUN echo "PATH=${PATH}" > /etc/environment
 
 USER runner
 
-ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["entrypoint.sh"]
+WORKDIR /
+CMD ["/bin/bash"]
