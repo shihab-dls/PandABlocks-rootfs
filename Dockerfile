@@ -59,6 +59,9 @@ COPY malcolmjs /malcolmjs
 RUN bash scripts/GNU-toolchain.sh
 RUN bash scripts/tar-files.sh
 
+# Create and change permissions for key directories
+RUN mkdir /repos && mkdir /build && chmod 777 /repos && chmod 777 /build
+
 # For the documentation
 RUN pip3 install matplotlib \ 
     rst2pdf \
@@ -97,9 +100,6 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     && tar xzf ./runner.tar.gz \
     && rm -f runner.tar.gz \
     && ./bin/installdependencies.sh
-    # libyaml-dev is required for ruby/setup-ruby action.
-    # It is installed after installdependencies.sh and before removing /var/lib/apt/lists
-    # to avoid rerunning apt-update on its own.
 
 ENV RUNNER_TOOL_CACHE=/opt/hostedtoolcache
 RUN mkdir /opt/hostedtoolcache \
@@ -117,5 +117,5 @@ RUN echo "PATH=${PATH}" > /etc/environment
 
 USER runner
 
-WORKDIR /
+WORKDIR /repos
 CMD ["/bin/bash"]
