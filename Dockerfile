@@ -59,9 +59,6 @@ COPY malcolmjs /malcolmjs
 RUN bash scripts/GNU-toolchain.sh
 RUN bash scripts/tar-files.sh
 
-# Create and change permissions for key directories
-RUN mkdir /repos && mkdir /build && chmod 777 /repos && chmod 777 /build
-
 # For the documentation
 RUN pip3 install matplotlib \ 
     rst2pdf \
@@ -118,4 +115,4 @@ RUN echo "PATH=${PATH}" > /etc/environment
 USER runner
 
 WORKDIR /repos
-CMD ["/bin/bash"]
+CMD ["/bin/bash", "-c", "sudo chmod 777 /repos && sudo chmod 777 /build"]
