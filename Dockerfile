@@ -112,7 +112,5 @@ RUN cd "$RUNNER_ASSETS_DIR" \
 ENV PATH="${PATH}:${HOME}/.local/bin/"
 RUN echo "PATH=${PATH}" > /etc/environment
 
-USER runner
-
 WORKDIR /repos
-CMD ["/bin/bash", "-c", "sudo chmod 777 /repos && sudo chmod 777 /build"]
+CMD ["/bin/bash"]
